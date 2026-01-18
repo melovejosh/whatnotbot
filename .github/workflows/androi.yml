@@ -6,9 +6,11 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    # Running on Ubuntu 24.04 (standard for 2026)
+    runs-on: ubuntu-24.04
     defaults:
       run:
+        # This tells every step to start inside this folder
         working-directory: ./whatnot-android
     steps:
       - name: Checkout Code
@@ -19,16 +21,21 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          # Automatically caches Gradle dependencies for faster subsequent runs
           cache: 'gradle'
 
       - name: Grant Execute Permission
+        # We are already in ./whatnot-android, so we reference gradlew directly
         run: chmod +x gradlew
         
       - name: Build Debug APK
-        run: ./whatnot-android/gradlew assembleDebug
+        # FIXED: Removed the folder prefix. 
+        # Using ./gradlew because the shell is already inside ./whatnot-android
+        run: ./gradlew assembleDebug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
+          # Search for the APK starting from the current working directory
           path: "**/build/outputs/apk/debug/*.apk"

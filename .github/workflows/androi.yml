@@ -1,32 +1,35 @@
 name: Build Android APK
 on:
   push:
-    branches: [ "main" ] # Trigger on push to main branch
-  workflow_dispatch: # Allows manual trigger from Actions tab
+    branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
-
+    runs-on: ubuntu-latest # Using latest for 2026 stability
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up JDK
+      - name: Set up JDK 17
         uses: actions/setup-java@v4
         with:
-          java-version: '17' # Match your project's Java version
+          java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle'
 
-      - name: Grant Execute Permission
-        run: chmod +x gradlew
-        
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          # This action automatically finds your gradlew file and sets permissions
+          # If your android code is in a subfolder, add: build-root-directory: YOUR_FOLDER_NAME
+          gradle-version: wrapper
+
       - name: Build Debug APK
-        run: bash ./gradlew assembleDebug
+        run: ./gradlew assembleDebug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: app/build/outputs/apk/debug/*.apk
+          # This search pattern finds the APK even if it's in a subfolder
+          path: "**/build/outputs/apk/debug/*.apk"

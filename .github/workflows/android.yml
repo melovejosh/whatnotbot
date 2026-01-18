@@ -23,5 +23,3 @@ jobs:
       env:
        GITHUB_TOKEN: ${{ secrets.TOKEN }}
        APP_FOLDER: app
- - name: Build and Release APK
-   uses: sangatdesai/release-apk@V1.0

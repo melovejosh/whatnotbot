@@ -6,30 +6,29 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # Using latest for 2026 stability
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ./whatnot-android
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: 'gradle'
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          # This action automatically finds your gradlew file and sets permissions
-          # If your android code is in a subfolder, add: build-root-directory: YOUR_FOLDER_NAME
-          gradle-version: wrapper
-
+      - name: Grant Execute Permission
+        run: chmod +x gradlew
+        
       - name: Build Debug APK
-        run: ./whatnot-android/gradlew assembleDebug
+        run: ./gradlew assembleDebug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          # This search pattern finds the APK even if it's in a subfolder
           path: "**/build/outputs/apk/debug/*.apk"

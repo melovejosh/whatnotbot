@@ -7,7 +7,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
-# Change from: runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Code

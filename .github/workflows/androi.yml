@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-22.04
     defaults:
       run:
-        working-directory: ./whatnot-android
+        working-directory: ./androi.yml
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
